@@ -547,9 +547,7 @@ body{
 
 .dashboard-card i{
 
-    font-size:55px;
-
-    opacity:0.2;
+    font-size: clamp(2rem, 5vw, 4rem);
 
 }
 

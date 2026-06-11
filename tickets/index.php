@@ -1,66 +1,40 @@
 <?php
 
 require_once("../config/db.php");
-
 require_once("../includes/permisos.php");
 
 /* =========================================
-   PAGINACION
+   PAGINACION Y FILTROS
 ========================================= */
 
 $limite = 10;
+$pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+if($pagina < 1) { $pagina = 1; }
+$inicio = ($pagina - 1) * $limite;
 
-$pagina =
-isset($_GET['pagina'])
-?
-(int)$_GET['pagina']
-:
-1;
-
-if($pagina < 1){
-
-    $pagina = 1;
-
+// Filtro de Estatus desde el Sidebar
+$estatusFiltro = isset($_GET['estatus']) ? $conexion->real_escape_string($_GET['estatus']) : '';
+$where = "WHERE 1=1";
+if(!empty($estatusFiltro)){
+    // Usamos LIKE para evitar problemas con mayúsculas/minúsculas
+    $where .= " AND LOWER(estatus) LIKE LOWER('%$estatusFiltro%')";
 }
-
-$inicio =
-($pagina - 1)
-* $limite;
 
 /* =========================================
    TOTAL TICKETS
 ========================================= */
 
-$sqlTotal =
-"SELECT COUNT(*) total
-FROM tickets";
-
-$resultTotal =
-$conexion->query($sqlTotal);
-
-$totalTickets =
-$resultTotal
-->fetch_assoc()['total'];
-
-$totalPaginas =
-ceil(
-    $totalTickets
-    /
-    $limite
-);
+$sqlTotal = "SELECT COUNT(*) total FROM tickets $where";
+$resultTotal = $conexion->query($sqlTotal);
+$totalTickets = $resultTotal->fetch_assoc()['total'];
+$totalPaginas = ceil($totalTickets / $limite);
 
 /* =========================================
    TICKETS
 ========================================= */
 
-$sql =
-"SELECT *
-FROM tickets
-ORDER BY id DESC
-LIMIT $inicio, $limite";
-
-$resultado =
-$conexion->query($sql);
+$sql = "SELECT * FROM tickets $where ORDER BY CAST(ticket_id AS UNSIGNED) ASC LIMIT $inicio, $limite";
+$resultado = $conexion->query($sql);
 
 ?>
 
@@ -208,85 +182,31 @@ href="../assets/css/style.css">
 
         <div>
 
-            <table
-            class="table table-hover">
-
-                <thead>
-
-                    <tr>
-
-                        <th>ID</th>
-
-                        <th>Título</th>
-
-                        <th>Estatus</th>
-
-                        <th>Urgencia</th>
-
-                        <th>Usuario</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    <?php
-                    while(
-                        $ticket =
-                        $resultado->fetch_assoc()
-                    ){
-                    ?>
-
-                    <tr>
-
-                        <td>
-
-                            <?php
-                            echo $ticket['ticket_id'];
-                            ?>
-
-                        </td>
-
-                        <td>
-
-                            <?php
-                            echo $ticket['titulo'];
-                            ?>
-
-                        </td>
-
-                        <td>
-
-                            <?php
-                            echo $ticket['estatus'];
-                            ?>
-
-                        </td>
-
-                        <td>
-
-                            <?php
-                            echo $ticket['urgencia'];
-                            ?>
-
-                        </td>
-
-                        <td>
-
-                            <?php
-                            echo $ticket['usuario'];
-                            ?>
-
-                        </td>
-
-                    </tr>
-
-                    <?php } ?>
-
-                </tbody>
-
-            </table>
+            <table class="table table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Area</th>
+            <th>Tipo</th>
+            <th>Urgencia</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        while( $ticket = $resultado->fetch_assoc() ){
+        ?>
+        <tr>
+            <td><?php echo $ticket['ticket_id']; ?></td>
+            <td><?php echo $ticket['usuario']; ?></td>
+            <td><?php echo $ticket['area']; ?></td>
+            <td><?php echo $ticket['titulo']; ?></td>
+            <td><?php echo $ticket['urgencia']; ?></td>
+            
+        </tr>
+        <?php } ?>
+    </tbody>
+</table>
 
         </div>
 

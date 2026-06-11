@@ -6,42 +6,27 @@ require_once("../config/db.php");
    FILTROS
 ========================================= */
 
-$mes =
-isset($_GET['mes'])
-?
-$_GET['mes']
-:
-date('m');
-
-$usuarioFiltro =
-isset($_GET['usuario'])
-?
-$_GET['usuario']
-:
-'';
+// 1. Atrapamos los filtros de la URL (si no hay, ponemos un valor por defecto)
+$mes = isset($_GET['mes']) ? $_GET['mes'] : date('m');
+$usuarioFiltro = isset($_GET['usuario']) ? $_GET['usuario'] : '';
+$areaFiltro = isset($_GET['area']) ? $_GET['area'] : 'todas'; // <-- NUEVO: Atrapamos el área
 
 /* =========================================
    WHERE
 ========================================= */
 
+// 2. Armamos las reglas de búsqueda (WHERE)
 $where = " WHERE 1=1 ";
 
-/* FILTRO MES */
-
 if($mes != 'todos'){
-
-    $where .=
-    " AND MONTH(fecha_crea) = '$mes' ";
-
+    $where .= " AND MONTH(fecha_crea) = '$mes' ";
 }
-
-/* FILTRO USUARIO */
-
 if(!empty($usuarioFiltro)){
-
-    $where .=
-    " AND usuario = '$usuarioFiltro' ";
-
+    $where .= " AND usuario = '$usuarioFiltro' ";
+}
+if($areaFiltro != 'todas'){
+    // <-- NUEVO: Si no eligió "todas", filtramos por el área específica en la tabla de tickets
+    $where .= " AND area = '$areaFiltro' "; 
 }
 
 /* =========================================
@@ -207,13 +192,13 @@ href="../assets/css/style.css">
 
             <h1 class="page-title">
 
-                Dashboard Tickets
+                Estadisticas
 
             </h1>
 
             <p class="page-subtitle">
 
-                Métricas empresariales
+                Filtros
 
             </p>
 
@@ -225,23 +210,13 @@ href="../assets/css/style.css">
 
     <div class="corporate-card mb-4">
 
-        <form
-        method="GET"
-        class="row g-3">
+        <form method="GET" class="row g-3">
 
             <!-- MES -->
 
-            <div class="col-md-4">
-
-                <label class="form-label">
-
-                    Mes
-
-                </label>
-
-                <select
-name="mes"
-class="form-select">
+            <div class="col-md-3">
+        <label class="form-label">Mes</label>
+        <select name="mes" class="form-select">
 
     <option value="todos">
 
@@ -292,17 +267,9 @@ class="form-select">
 
             <!-- USUARIO -->
 
-            <div class="col-md-4">
-
-                <label class="form-label">
-
-                    Usuario
-
-                </label>
-
-                <select
-                name="usuario"
-                class="form-select">
+            <div class="col-md-3">
+                <label class="form-label">Usuario</label>
+                <select name="usuario" class="form-select">
 
                     <option value="">
 
@@ -335,20 +302,37 @@ class="form-select">
 
             </div>
 
+            <div class="col-md-3">
+        <label class="form-label">Área</label>
+        <select name="area" class="form-select">
+            <option value="todas" <?php if($areaFiltro == 'todas') echo 'selected'; ?>>Todas las áreas</option>
+            <option value="KOF" <?php if($areaFiltro == 'KOF') echo 'selected'; ?>>KOF</option>
+            <option value="KFC" <?php if($areaFiltro == 'KFC') echo 'selected'; ?>>KFC</option>
+            <option value="KFC" <?php if($areaFiltro == 'REVENUE') echo 'selected'; ?>>REVENUE</option>
+            <option value="KFC" <?php if($areaFiltro == 'ADMIN Y FINANZAS') echo 'selected'; ?>>ADMIN Y FINANZAS</option>
+            <option value="KFC" <?php if($areaFiltro == 'GOBIERNO') echo 'selected'; ?>>GOBIERNO</option>
+            <option value="KFC" <?php if($areaFiltro == 'DIGITAL') echo 'selected'; ?>>DIGITAL</option>
+            <option value="KFC" <?php if($areaFiltro == 'IP') echo 'selected'; ?>>IP</option>
+            <option value="KFC" <?php if($areaFiltro == 'EJECUCION IMPECABLE') echo 'selected'; ?>>EJECUCUCION IMPECABLE</option>
+            <option value="KFC" <?php if($areaFiltro == 'INNOVACION') echo 'selected'; ?>>INNOVACION</option>
+            <option value="KFC" <?php if($areaFiltro == 'SISTEMAS') echo 'selected'; ?>>SISTEMAS</option>
+            </select>
+    </div>
+
             <!-- BOTON -->
 
-            <div class="col-md-4 d-flex align-items-end">
-
-                <button
-                class="btn-corporate w-100">
-
-                    Aplicar filtros
-
+            <div class="col-md-3 d-flex align-items-end gap-2">
+                <button type="submit" class="btn-corporate w-50">
+                    <i class="bi bi-funnel-fill"></i> Filtrar
                 </button>
-
+                
+                <a href="exportar_excel.php?mes=<?php echo $mes; ?>" class="btn-corporate w-50 text-center text-decoration-none" style="background: #2ed573;">
+                    <i class="bi bi-file-earmark-excel-fill"></i> Exportar
+                </a>
             </div>
-
         </form>
+
+            
 
     </div>
 

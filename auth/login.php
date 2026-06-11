@@ -78,401 +78,188 @@ rel="stylesheet">
 href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
 rel="stylesheet">
 
-<style>
-
-/* ===== BODY ===== */
-
-body{
-
-    margin:0;
-    padding:0;
-
-    height:100vh;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    font-family:'Segoe UI', sans-serif;
-
-    background:
-    linear-gradient(
-        135deg,
-        #243ca7db,
-        #030205dc
-    );
-
-    overflow:hidden;
-
-}
-
-/* ===== FONDO CIRCULOS ===== */
-
-.bg-circle{
-
-    position:absolute;
-
-    border-radius:50%;
-
-    background:rgba(255,255,255,0.1);
-
-    animation:float 6s infinite ease-in-out;
-
-}
-
-.circle1{
-
-    width:300px;
-    height:300px;
-
-    top:-100px;
-    left:-100px;
-
-}
-
-.circle2{
-
-    width:200px;
-    height:200px;
-
-    bottom:-50px;
-    right:-50px;
-
-}
-
-/* ===== ANIMACION ===== */
-
-@keyframes float{
-
-    0%{
-        transform:translateY(0px);
-    }
-
-    50%{
-        transform:translateY(20px);
-    }
-
-    100%{
-        transform:translateY(0px);
-    }
-
-}
-
-/* ===== CARD LOGIN ===== */
-
-.login-card{
-
-    position:relative;
-
-    z-index:10;
-
-    width:400px;
-
-    padding:40px;
-
-    border-radius:25px;
-
-    background:rgba(255,255,255,0.15);
-
-    backdrop-filter:blur(20px);
-
-    box-shadow:
-    0 15px 40px rgba(0,0,0,0.3);
-
-    border:
-    1px solid rgba(255,255,255,0.2);
-
-}
-
-/* ===== TITULO ===== */
-
-.login-title{
-
-    text-align:center;
-
-    color:white;
-
-    font-size:35px;
-
-    font-weight:700;
-
-    margin-bottom:10px;
-
-}
-
-.login-subtitle{
-
-    text-align:center;
-
-    color:#eaeaea;
-
-    margin-bottom:30px;
-
-}
-
-/* ===== INPUTS ===== */
-
-.input-group{
-
-    margin-bottom:20px;
-
-}
-
-.input-group-text{
-
-    border:none !important;
-
-    background:rgba(255,255,255,0.2);
-
-    color:white;
-
-    border-radius:12px 0 0 12px;
-
-}
-
-.form-control{
-
-    border:none !important;
-
-    background:rgba(255,255,255,0.2) !important;
-
-    color:white !important;
-
-    padding:14px !important;
-
-    border-radius:0 12px 12px 0 !important;
-
-}
-
-/* PLACEHOLDER */
-
-.form-control::placeholder{
-
-    color:#e0e0e0;
-
-}
-
-/* FOCUS */
-
-.form-control:focus{
-
-    box-shadow:
-    0 0 15px rgba(255,255,255,0.3) !important;
-
-}
-
-/* ===== BOTON ===== */
-
-.btn-login{
-
-    width:100%;
-
-    padding:14px;
-
-    border:none;
-
-    border-radius:14px;
-
-    background:white;
-
-    color:#5a67d8;
-
-    font-size:18px;
-
-    font-weight:700;
-
-    transition:0.3s;
-
-}
-
-/* HOVER */
-
-.btn-login:hover{
-
-    transform:translateY(-3px);
-
-    box-shadow:
-    0 10px 20px rgba(0,0,0,0.2);
-
-    background:#f1f2f6;
-
-}
-
-/* ===== ERROR ===== */
-
-.error-box{
-
-    background:#ff4757;
-
-    color:white;
-
-    padding:12px;
-
-    border-radius:12px;
-
-    margin-bottom:20px;
-
-    text-align:center;
-
-}
-
-/* ===== FOOTER ===== */
-
-.footer-text{
-
-    text-align:center;
-
-    color:#ddd;
-
-    margin-top:20px;
-
-    font-size:14px;
-
-}
-
-</style>
+<link
+rel="stylesheet"
+href="../assets/css/login.css">
 
 </head>
 
 <body>
 
-<!-- CIRCULOS -->
-
-<div class="bg-circle circle1"></div>
-
-<div class="bg-circle circle2"></div>
-
 <!-- LOGIN -->
 
-<div class="login-card">
+<div class="login-container">
 
-    <h1 class="login-title">
-        CRUD SYSTEM
-    </h1>
+    <!-- LEFT -->
 
-    <p class="login-subtitle">
-        Acceso seguro al sistema
-    </p>
+    <div class="login-left">
 
-    <?php if(isset($error)){ ?>
+        <div class="logo-box">
 
-        <div class="error-box">
-
-            <?php echo $error; ?>
+            <i class="bi bi-shield-lock-fill"></i>
 
         </div>
 
-    <?php } ?>
+        <h1 class="system-title">
 
-    <form method="POST" id="loginForm">
+            Ticket Management System
 
-        <!-- USUARIO -->
+        </h1>
 
-        <div class="input-group">
+        <p class="system-text">
 
-            <span class="input-group-text">
+            Plataforma corporativa para administración
+            de tickets, usuarios y monitoreo interno
+            del sistema.
 
-                <i class="bi bi-person-fill"></i>
+        </p>
 
-            </span>
+        <div class="system-badge">
 
-            <input
-            type="text"
-            name="nombre"
-            class="form-control"
-            placeholder="Usuario"
-            required>
+            <i class="bi bi-check-circle-fill"></i>
 
-        </div>
-
-        <!-- PASSWORD -->
-
-        <div class="input-group">
-
-            <span class="input-group-text">
-
-                <i class="bi bi-lock-fill"></i>
-
-            </span>
-
-            <input
-            type="password"
-            name="password"
-            id="password"
-            class="form-control"
-            placeholder="Contraseña"
-            required>
-
-            <!-- OJO -->
-
-            <span
-            class="input-group-text"
-            style="cursor:pointer"
-            onclick="togglePassword()">
-
-                <i
-                class="bi bi-eye-fill"
-                id="eyeIcon">
-                </i>
-
-            </span>
+            Acceso seguro 
 
         </div>
 
-        <!-- RECORDARME -->
+    </div>
 
-        <div class="form-check mb-4">
+    <!-- RIGHT -->
 
-            <input
-            class="form-check-input"
-            type="checkbox"
-            id="remember">
+    <div class="login-right">
 
-            <label
-            class="form-check-label text-white">
+        <div class="login-header">
 
-                Recordarme
+            <h2>
+
+                Iniciar sesión
+
+            </h2>
+
+            <p>
+
+                Ingresa tus credenciales para continuar
+
+            </p>
+
+        </div>
+
+        <?php if(isset($error)){ ?>
+
+            <div class="error-box">
+
+                <?php echo $error; ?>
+
+            </div>
+
+        <?php } ?>
+
+        <form method="POST" id="loginForm">
+
+            <!-- USER -->
+
+            <label class="form-label">
+
+                Usuario
 
             </label>
 
-        </div>
+            <div class="input-custom">
 
-        <!-- BOTON -->
+                <i class="bi bi-person-fill"></i>
 
-        <button
-        class="btn-login"
-        id="loginBtn">
+                <input
+                type="text"
+                name="nombre"
+                placeholder="Ingresa tu usuario"
+                required>
 
-            <span id="btnText">
+            </div>
 
-                <i class="bi bi-box-arrow-in-right"></i>
-                Ingresar
+            <!-- PASSWORD -->
 
-            </span>
+            <label class="form-label">
 
-            <!-- LOADER -->
+                Contraseña
 
-            <span
-            id="loader"
-            style="display:none;">
+            </label>
+
+            <div class="input-custom">
+
+                <i class="bi bi-lock-fill"></i>
+
+                <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Ingresa tu contraseña"
+                required>
 
                 <span
-                class="spinner-border spinner-border-sm">
+                class="password-toggle"
+                onclick="togglePassword()">
+
+                    <i
+                    class="bi bi-eye-fill"
+                    id="eyeIcon">
+                    </i>
+
                 </span>
 
-                Cargando...
+            </div>
 
-            </span>
+            <!-- CHECK -->
 
-        </button>
+            <div class="form-check">
 
-    </form>
+                <input
+                class="form-check-input"
+                type="checkbox"
+                id="remember">
 
-    <div class="footer-text">
+                <label
+                class="form-check-label">
 
-        CRUD AJAX · PHP · MySQL
+                    Mantener sesión iniciada
+
+                </label>
+
+            </div>
+
+            <!-- BTN -->
+
+            <button
+            type="submit"
+            class="btn-login">
+
+                <span id="btnText">
+
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Acceder al sistema
+
+                </span>
+
+                <span
+                id="loader"
+                style="display:none;">
+
+                    <span
+                    class="spinner-border spinner-border-sm">
+                    </span>
+
+                    Validando...
+
+                </span>
+
+            </button>
+
+        </form>
+
+        <div class="login-footer">
+
+            SistemasDOVER
+
+        </div>
 
     </div>
 
