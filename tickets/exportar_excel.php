@@ -35,8 +35,8 @@ $hoja1->setTitle('Uso por Usuarios');
 // Encabezados
 $hoja1->setCellValue('A1', 'Mes');
 $hoja1->setCellValue('B1', 'Área');
-$hoja1->setCellValue('B1', 'Usuario');
-$hoja1->setCellValue('C1', 'Total de Tickets');
+$hoja1->setCellValue('C1', 'Usuario');
+$hoja1->setCellValue('D1', 'Total de Tickets');
 
 // Estilo de encabezados
 $estiloEncabezado = [
@@ -44,7 +44,7 @@ $estiloEncabezado = [
     'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF3742FA']],
     'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]]
 ];
-$hoja1->getStyle('A1:C1')->applyFromArray($estiloEncabezado);
+$hoja1->getStyle('A1:D1')->applyFromArray($estiloEncabezado);
 
 // Consulta SQL
 $sqlUsuarios = "
@@ -74,7 +74,7 @@ if ($resultUsuarios) {
     }
 }
 // Autoajustar columnas
-foreach (range('A', 'C') as $col) {
+foreach (range('A', 'D') as $col) {
     $hoja1->getColumnDimension($col)->setAutoSize(true);
 }
 
@@ -119,7 +119,11 @@ $spreadsheet->setActiveSheetIndex(0);
 /* =========================================
    DESCARGAR ARCHIVO
 ========================================= */
-$nombreArchivo = 'Reporte_Tickets_' . date('Y-m-d_H-i') . '.xlsx';
+$nombreArchivo = 'Estadisticas_Reportes_' . date('Y-m-d_H-i') . '.xlsx';
+
+if (ob_get_length()) {
+    ob_end_clean();
+}
 
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header('Content-Disposition: attachment;filename="' . $nombreArchivo . '"');
@@ -128,4 +132,3 @@ header('Cache-Control: max-age=0');
 $writer = new Xlsx($spreadsheet);
 $writer->save('php://output');
 exit();
-?>

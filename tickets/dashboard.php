@@ -133,6 +133,41 @@ if($resultUrgencias){
 }
 
 /* =========================================
+   TIEMPO EFECTIVO POR ÁREA
+========================================= */
+
+// Convertimos HH:MM a minutos para poder graficarlo
+$sqlTiempos = "
+SELECT 
+    area, 
+    SUM(TIME_TO_SEC(STR_TO_DATE(tiempo_efectivo, '%H:%i'))) / 60 as total_minutos,
+    AVG(TIME_TO_SEC(STR_TO_DATE(tiempo_efectivo, '%H:%i'))) / 60 as promedio_minutos
+FROM tickets
+$where
+AND tiempo_efectivo IS NOT NULL 
+AND tiempo_efectivo != ''
+GROUP BY area
+ORDER BY total_minutos DESC
+";
+
+$resultTiempos = $conexion->query($sqlTiempos);
+
+$areasTiempo = [];
+$totalMinutosArea = [];
+$promedioMinutosArea = [];
+
+if($resultTiempos){
+    while($fila = $resultTiempos->fetch_assoc()){
+        // Si el área viene vacía, le ponemos un nombre por defecto
+        $areasTiempo[] = empty($fila['area']) ? 'Sin Área' : $fila['area'];
+        
+        // Redondeamos los minutos a números enteros
+        $totalMinutosArea[] = round($fila['total_minutos']);
+        $promedioMinutosArea[] = round($fila['promedio_minutos']);
+    }
+}
+
+/* =========================================
    USUARIOS FILTRO
 ========================================= */
 
@@ -396,6 +431,26 @@ href="../assets/css/style.css">
 
     </div>
 
+    <div class="row g-4 mt-2">
+        
+        <div class="col-lg-6">
+            <div class="corporate-card">
+                <h4 class="mb-4">Tiempo Total Invertido (Minutos)</h4>
+                <canvas id="tiempoTotalChart"></canvas>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="corporate-card">
+                <h4 class="mb-4">Tiempo Promedio por Ticket (Min)</h4>
+                <canvas id="tiempoPromedioChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+
+
 </div>
 
 <script>
@@ -461,6 +516,65 @@ document.getElementById(
     }
 
 });
+
+/* TIEMPO TOTAL INVERTIDO (DOUGHNUT) */
+new Chart(
+    document.getElementById('tiempoTotalChart'),
+    {
+        type: 'doughnut',
+        data: {
+            labels: <?php echo json_encode($areasTiempo); ?>,
+            datasets: [{
+                data: <?php echo json_encode($totalMinutosArea); ?>,
+                backgroundColor: [
+                    '#3742fa', '#2ed573', '#ff4757', '#ffa502', '#5352ed', 
+                    '#ff7f50', '#2f3542', '#1e90ff', '#eccc68'
+                ]
+            }]
+        },
+        options: {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' + context.raw + ' min';
+                        }
+                    }
+                }
+            }
+        }
+    }
+);
+
+/* TIEMPO PROMEDIO POR ÁREA (BARRA HORIZONTAL) */
+new Chart(
+    document.getElementById('tiempoPromedioChart'),
+    {
+        type: 'bar',
+        data: {
+            labels: <?php echo json_encode($areasTiempo); ?>,
+            datasets: [{
+                label: 'Minutos Promedio',
+                data: <?php echo json_encode($promedioMinutosArea); ?>,
+                backgroundColor: '#1e90ff',
+                borderRadius: 5
+            }]
+        },
+        options: {
+            indexAxis: 'y', // Esto hace que la gráfica de barras sea horizontal
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.raw + ' min prom/ticket';
+                        }
+                    }
+                }
+            }
+        }
+    }
+);
 
 </script>
 
