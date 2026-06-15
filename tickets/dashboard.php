@@ -343,14 +343,14 @@ href="../assets/css/style.css">
             <option value="todas" <?php if($areaFiltro == 'todas') echo 'selected'; ?>>Todas las áreas</option>
             <option value="KOF" <?php if($areaFiltro == 'KOF') echo 'selected'; ?>>KOF</option>
             <option value="KFC" <?php if($areaFiltro == 'KFC') echo 'selected'; ?>>KFC</option>
-            <option value="KFC" <?php if($areaFiltro == 'REVENUE') echo 'selected'; ?>>REVENUE</option>
-            <option value="KFC" <?php if($areaFiltro == 'ADMIN Y FINANZAS') echo 'selected'; ?>>ADMIN Y FINANZAS</option>
-            <option value="KFC" <?php if($areaFiltro == 'GOBIERNO') echo 'selected'; ?>>GOBIERNO</option>
-            <option value="KFC" <?php if($areaFiltro == 'DIGITAL') echo 'selected'; ?>>DIGITAL</option>
-            <option value="KFC" <?php if($areaFiltro == 'IP') echo 'selected'; ?>>IP</option>
-            <option value="KFC" <?php if($areaFiltro == 'EJECUCION IMPECABLE') echo 'selected'; ?>>EJECUCUCION IMPECABLE</option>
-            <option value="KFC" <?php if($areaFiltro == 'INNOVACION') echo 'selected'; ?>>INNOVACION</option>
-            <option value="KFC" <?php if($areaFiltro == 'SISTEMAS') echo 'selected'; ?>>SISTEMAS</option>
+            <option value="REVENUE" <?php if($areaFiltro == 'REVENUE') echo 'selected'; ?>>REVENUE</option>
+            <option value="ADMIN Y FINANZAS" <?php if($areaFiltro == 'ADMIN Y FINANZAS') echo 'selected'; ?>>ADMIN Y FINANZAS</option>
+            <option value="GOBIERNO" <?php if($areaFiltro == 'GOBIERNO') echo 'selected'; ?>>GOBIERNO</option>
+            <option value="DIGITAL" <?php if($areaFiltro == 'DIGITAL') echo 'selected'; ?>>DIGITAL</option>
+            <option value="IP" <?php if($areaFiltro == 'IP') echo 'selected'; ?>>IP</option>
+            <option value="EJECUCION IMPECABLE" <?php if($areaFiltro == 'EJECUCION IMPECABLE') echo 'selected'; ?>>EJECUCUCION IMPECABLE</option>
+            <option value="INNOVACION" <?php if($areaFiltro == 'INNOVACION') echo 'selected'; ?>>INNOVACION</option>
+            <option value="SISTEMAS" <?php if($areaFiltro == 'SISTEMAS') echo 'selected'; ?>>SISTEMAS</option>
             </select>
     </div>
 
@@ -361,9 +361,9 @@ href="../assets/css/style.css">
                     <i class="bi bi-funnel-fill"></i> Filtrar
                 </button>
                 
-                <a href="exportar_excel.php?mes=<?php echo $mes; ?>" class="btn-corporate w-50 text-center text-decoration-none" style="background: #2ed573;">
+                <button type="submit" formaction="exportar_excel.php" class="btn-corporate w-50 text-center" style="background: #2ed573; color: white;">
                     <i class="bi bi-file-earmark-excel-fill"></i> Exportar
-                </a>
+                </button>
             </div>
         </form>
 

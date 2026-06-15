@@ -57,6 +57,28 @@ $sqlUsuarios = "
 $resultUsuarios = $conexion->query($sqlUsuarios);
 
 $fila = 2;
+
+if ($resultUsuarios) {
+    while ($row = $resultUsuarios->fetch_assoc()) {
+        $nombreMes = isset($mesesNombres[$row['numero_mes']]) ? $mesesNombres[$row['numero_mes']] : 'Desconocido';
+
+        // Forzamos a que el mes sea un número entero (ej. "05" pasa a ser 5)
+        $mesIndex = (int)$row['numero_mes'];
+        $nombreMes = isset($mesesNombres[$mesIndex]) ? $mesesNombres[$mesIndex] : 'Desconocido';
+
+        // Verificamos si el área viene vacía en la base de datos
+        $areaTicket = !empty($row['area']) ? $row['area'] : 'Sin Asignar';
+        
+        $hoja1->setCellValue('A' . $fila, $nombreMes);
+        $hoja1->setCellValue('B' . $fila, $areaTicket);
+        $hoja1->setCellValue('C' . $fila, $row['usuario']);
+        $hoja1->setCellValue('D' . $fila, $row['total']);
+        $fila++;
+    }
+}
+
+
+$fila = 3;
 $mesesNombres = [
     1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril',
     5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto',
