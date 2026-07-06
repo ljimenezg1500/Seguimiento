@@ -146,6 +146,8 @@ FROM tickets
 $where
 AND tiempo_efectivo IS NOT NULL 
 AND tiempo_efectivo != ''
+AND tiempo_efectivo != '00:00'
+AND LOWER(estatus) LIKE '%cerrado%'
 GROUP BY area
 ORDER BY total_minutos DESC
 ";
@@ -161,9 +163,33 @@ if($resultTiempos){
         // Si el área viene vacía, le ponemos un nombre por defecto
         $areasTiempo[] = empty($fila['area']) ? 'Sin Área' : $fila['area'];
         
-        // Redondeamos los minutos a números enteros
+        // Redondeamos los minutos a números enteros para que se vea limpio
         $totalMinutosArea[] = round($fila['total_minutos']);
         $promedioMinutosArea[] = round($fila['promedio_minutos']);
+    }
+}
+
+/* =========================================
+   TICKETS POR ÁREA
+========================================= */
+
+$sqlTicketsArea = "
+SELECT 
+    area, 
+    COUNT(*) as total 
+FROM tickets 
+$where 
+GROUP BY area 
+ORDER BY total DESC
+";
+$resultTicketsArea = $conexion->query($sqlTicketsArea);
+$areasNombres = [];
+$areasCantidades = [];
+if($resultTicketsArea){
+    while($fila = $resultTicketsArea->fetch_assoc()){
+        // Si el área no tiene nombre registrado, le ponemos un texto genérico
+        $areasNombres[] = empty($fila['area']) ? 'Sin Área' : $fila['area'];
+        $areasCantidades[] = $fila['total'];
     }
 }
 
@@ -220,25 +246,15 @@ href="../assets/css/style.css">
 <div class="content">
 
     <!-- HEADER -->
-
     <div class="page-header">
-
         <div>
-
             <h1 class="page-title">
-
                 Estadisticas
-
             </h1>
-
             <p class="page-subtitle">
-
                 Filtros
-
             </p>
-
         </div>
-
     </div>
 
     <!-- FILTROS -->
@@ -246,9 +262,7 @@ href="../assets/css/style.css">
     <div class="corporate-card mb-4">
 
         <form method="GET" class="row g-3">
-
             <!-- MES -->
-
             <div class="col-md-3">
         <label class="form-label">Mes</label>
         <select name="mes" class="form-select">
@@ -351,6 +365,10 @@ href="../assets/css/style.css">
             <option value="EJECUCION IMPECABLE" <?php if($areaFiltro == 'EJECUCION IMPECABLE') echo 'selected'; ?>>EJECUCUCION IMPECABLE</option>
             <option value="INNOVACION" <?php if($areaFiltro == 'INNOVACION') echo 'selected'; ?>>INNOVACION</option>
             <option value="SISTEMAS" <?php if($areaFiltro == 'SISTEMAS') echo 'selected'; ?>>SISTEMAS</option>
+            <option value="RADIO" <?php if($areaFiltro == 'RADIO') echo 'selected'; ?>>RADIO</option>
+            <option value="EXTERIORES" <?php if($areaFiltro == 'EXTERIORES') echo 'selected'; ?>>EXTERIORES</option>
+            <option value="MENSAJERO" <?php if($areaFiltro == 'MENSAJERO') echo 'selected'; ?>>MENSAJERO</option>
+            <option value="PLANEACION" <?php if($areaFiltro == 'PLANEACION') echo 'selected'; ?>>PLANEACION</option>
             </select>
     </div>
 
@@ -393,56 +411,59 @@ href="../assets/css/style.css">
 
     <div class="row g-4">
 
-        <!-- USUARIOS -->
+        <!-- TOP USUARIOS -->
 
         <div class="col-lg-7">
-
             <div class="corporate-card">
-
                 <h4 class="mb-4">
-
-                    Top usuarios
-
+                    Top usuarios <?php echo ($mes != 'todos' && isset($meses[$mes])) ? '- ' . $meses[$mes] . ' ' . date('Y') : ''; ?>
                 </h4>
-
                 <canvas id="usuariosChart"></canvas>
-
             </div>
-
         </div>
 
         <!-- URGENCIAS -->
-
         <div class="col-lg-5">
-
             <div class="corporate-card">
-
                 <h4 class="mb-4">
-
-                    Urgencias
-
+                    Urgencia <?php echo ($mes != 'todos' && isset($meses[$mes])) ? '- ' . $meses[$mes] . ' ' . date('Y') : ''; ?>
                 </h4>
-
                 <canvas id="urgenciasChart"></canvas>
-
             </div>
-
         </div>
+    </div>
 
+    <!-- TICKETS SUBIDOS POR AREA -->
+
+    <div class="row g-4 mt-2">
+        <div class="col-lg-12">
+            <div class="corporate-card">
+                <h4 class="mb-4">
+                    Tickets subidos por Área <?php echo ($mes != 'todos' && isset($meses[$mes])) ? '- ' . $meses[$mes] . ' ' . date('Y') : ''; ?>
+                </h4>
+                <canvas id="ticketsPorAreaChart" style="max-height: 350px;"></canvas>
+            </div>
+        </div>
     </div>
 
     <div class="row g-4 mt-2">
         
+            <!-- TIEMPO TOATAL INVERTIDO -->
         <div class="col-lg-6">
             <div class="corporate-card">
-                <h4 class="mb-4">Tiempo Total Invertido (Minutos)</h4>
+                <h4 class="mb-4">
+                    Tiempo Total Invertido (Minutos) <?php echo ($mes != 'todos' && isset($meses[$mes])) ? '- ' . $meses[$mes] . ' ' . date('Y') : ''; ?>
+                </h4>
                 <canvas id="tiempoTotalChart"></canvas>
             </div>
         </div>
 
+                <!-- TIEMPO PROMEDIO POR TICKET(MIN) -->
         <div class="col-lg-6">
             <div class="corporate-card">
-                <h4 class="mb-4">Tiempo Promedio por Ticket (Min)</h4>
+                <h4 class="mb-4">
+                    Tiempo Promedio por Ticket (Min) <?php echo ($mes != 'todos' && isset($meses[$mes])) ? '- ' . $meses[$mes] . ' ' . date('Y') : ''; ?>
+                </h4>
                 <canvas id="tiempoPromedioChart"></canvas>
             </div>
         </div>
@@ -455,7 +476,7 @@ href="../assets/css/style.css">
 
 <script>
 
-/* USUARIOS */
+/* TOP USUARIOS */
 
 new Chart(
 
@@ -464,57 +485,38 @@ document.getElementById(
 ),
 
 {
-
     type:'bar',
-
     data:{
-
         labels:
         <?php echo json_encode($usuarios); ?>,
-
         datasets:[{
-
             data:
             <?php echo json_encode($cantidades); ?>,
-
             borderRadius:10
-
         }]
-
     }
-
 });
 
 /* URGENCIAS */
 
 new Chart(
-
 document.getElementById(
 'urgenciasChart'
 ),
-
 {
-
     type:'doughnut',
-
     data:{
-
         labels:
         <?php echo json_encode($urgencias); ?>,
-
         datasets:[{
-
             data:
             <?php
             echo json_encode(
                 $cantidadUrgencias
             );
             ?>
-
         }]
-
     }
-
 });
 
 /* TIEMPO TOTAL INVERTIDO (DOUGHNUT) */
@@ -569,6 +571,43 @@ new Chart(
                         label: function(context) {
                             return context.raw + ' min prom/ticket';
                         }
+                    }
+                }
+            }
+        }
+    }
+);
+
+/* TICKETS POR ÁREA (BARRA) */
+new Chart(
+    document.getElementById('ticketsPorAreaChart'),
+    {
+        type: 'bar',
+        data: {
+            labels: <?php echo json_encode($areasNombres); ?>,
+            datasets: [{
+                label: 'Cantidad de Tickets',
+                data: <?php echo json_encode($areasCantidades); ?>,
+                backgroundColor: '#2ed573', /* Un color verde para destacar, puedes cambiarlo */
+                borderRadius: 5
+            }]
+        },
+        options: {
+            plugins: {
+                legend: { display: false }, /* Ocultamos la leyenda superior porque ya es intuitivo */
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.raw + ' tickets';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1 // Para que no muestre decimales en la cantidad de tickets
                     }
                 }
             }

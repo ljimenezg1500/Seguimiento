@@ -88,7 +88,7 @@ href="../assets/css/style.css">
 
             <p class="dashboard-subtitle">
 
-                Bienvenido nuevamente
+                Bienvenido 
                 <strong>
 
                     <?php
@@ -112,15 +112,10 @@ href="../assets/css/style.css">
         <div class="col-md-4">
 
             <div class="dashboard-card users-card">
-
                 <div>
-
                     <h5>
-
                         Usuarios
-
                     </h5>
-
                     <h2>
 
                         <?php

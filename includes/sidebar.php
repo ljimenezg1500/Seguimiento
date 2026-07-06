@@ -1,28 +1,17 @@
 <?php
-
 if(session_status() === PHP_SESSION_NONE){
-
     session_start();
-
 }
-
 ?>
 
 <!-- SIDEBAR -->
-
 <div class="sidebar">
-
     <!-- LOGO -->
-
     <div class="sidebar-logo">
-
         <h2>
-
             <i class="bi bi-grid-1x2-fill"></i>
             Segumiento KPIs
-
         </h2>
-
     </div>
 
     <!-- MENU -->
@@ -32,10 +21,8 @@ if(session_status() === PHP_SESSION_NONE){
         <!-- DASHBOARD -->
 
         <li>
-
             <a
             href="../dashboard/index.php"
-
             class="<?php
             echo basename($_SERVER['PHP_SELF']) == 'index.php'
             &&
@@ -43,13 +30,9 @@ if(session_status() === PHP_SESSION_NONE){
             ? 'active'
             : '';
             ?>">
-
                 <i class="bi bi-house-fill"></i>
-
                 Home
-
             </a>
-
         </li>
 
         <!-- USUARIOS -->
@@ -88,9 +71,7 @@ if(session_status() === PHP_SESSION_NONE){
 echo
 basename($_SERVER['PHP_SELF'])
 == 'index.php'
-
 &&
-
 strpos(
     $_SERVER['REQUEST_URI'],
     'tickets'
@@ -100,30 +81,21 @@ strpos(
 :
 ''
 ?>">
-
         <i class="bi bi-ticket-detailed-fill"></i>
-
         Tickets
-
     </a>
-
 </li>
 
 <?php } ?>
 
 <li>
-
     <a
     href="../tickets/dashboard.php"
-
     class="<?php
-
 echo
 basename($_SERVER['PHP_SELF'])
 == 'dashboard.php'
-
 &&
-
 strpos(
     $_SERVER['REQUEST_URI'],
     'tickets'
@@ -226,3 +198,4 @@ strpos(
     </div>
 
 </div>
+
