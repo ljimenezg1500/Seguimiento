@@ -36,13 +36,9 @@ if(session_status() === PHP_SESSION_NONE){
         </li>
 
         <!-- USUARIOS -->
-
         <li>
-
         <?php if($_SESSION['rol'] == 'admin'){ ?>
-
             <a href="../usuarios/index.php"
-
             class="<?php
             echo strpos(
                 $_SERVER['REQUEST_URI'],
@@ -51,22 +47,13 @@ if(session_status() === PHP_SESSION_NONE){
             ? 'active'
             : '';
             ?>">
-
                 <i class="bi bi-people-fill"></i>
-
                 Usuarios
-
             </a>
-
         </li>
-        
 
         <li>
-
-    <a
-    href="../tickets/index.php"
-
-    class="<?php
+    <a href="../tickets/index.php" class="<?php
 
 echo
 basename($_SERVER['PHP_SELF'])
@@ -82,7 +69,7 @@ strpos(
 ''
 ?>">
         <i class="bi bi-ticket-detailed-fill"></i>
-        Tickets
+        tickets
     </a>
 </li>
 
@@ -100,41 +87,25 @@ strpos(
     $_SERVER['REQUEST_URI'],
     'tickets'
 )
-
 ?
-
 'active'
-
 :
-
 ''
-
 ?>">
-
         <i class="bi bi-bar-chart-fill"></i>
-
         Estadisticas
-
     </a>
-
 </li>
-
         <!-- SOLO ADMIN -->
 
         <?php if($_SESSION['rol'] == 'admin'){ ?>
 
         <li>
-
             <a href="#">
-
                 <i class="bi bi-shield-lock-fill"></i>
-
                 Administración
-
             </a>
-
         </li>
-
         <?php } ?>
 
         <!-- CONFIGURACION -->
@@ -160,23 +131,17 @@ strpos(
         <div class="user-info">
 
             <i class="bi bi-person-circle"></i>
-
             <div>
-
                 <strong>
-
                     <?php
                     echo $_SESSION['user'];
                     ?>
-
                 </strong>
 
                 <small>
-
                     <?php
                     echo ucfirst($_SESSION['rol']);
                     ?>
-
                 </small>
 
             </div>

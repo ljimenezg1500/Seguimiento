@@ -38,10 +38,8 @@ $sqlTotal =
 "SELECT COUNT(*) total
 FROM tickets
 $where";
-
 $resultTotal =
 $conexion->query($sqlTotal);
-
 $total =
 $resultTotal
 ?
@@ -54,21 +52,14 @@ $resultTotal->fetch_assoc()['total']
 ========================================= */
 
 $sqlUsuarios =
-
 "SELECT usuario,
 COUNT(*) total
-
 FROM tickets
-
 $where
-
 AND LOWER(estatus)
 LIKE '%cerrado%'
-
 GROUP BY usuario
-
 ORDER BY total DESC
-
 LIMIT 10";
 
 $resultUsuarios =
@@ -78,20 +69,15 @@ $usuarios = [];
 $cantidades = [];
 
 if($resultUsuarios){
-
     while(
         $fila =
         $resultUsuarios->fetch_assoc()
     ){
-
         $usuarios[] =
         $fila['usuario'];
-
         $cantidades[] =
         $fila['total'];
-
     }
-
 }
 
 /* =========================================

@@ -60,17 +60,13 @@ foreach($filas as $index => $fila){
     $estatus = $fila[2];
     $urgencia = $fila[3];
     $usuario = $fila[4];
-    
-    
-    $fecha_crea = !empty($fila[5]) ? date('Y-m-d', strtotime($fila[5])) : null;
-    $hora_crea = $fila[6];
-    
-    $fecha_cierre = !empty($fila[7]) ? date('Y-m-d', strtotime($fila[7])) : null;
-    $hora_cierre = $fila[8];
-    
-    $tiempo_efectivo = $fila[9];
-    $area = isset($fila[10]) ? trim($fila[10]) : 'Sin Asignar';
-
+    $nombre_corto = $fila[5];
+    $fecha_crea = !empty($fila[6]) ? date('Y-m-d', strtotime($fila[6])) : null;
+    $hora_crea = $fila[7];
+    $fecha_cierre = !empty($fila[8]) ? date('Y-m-d', strtotime($fila[8])) : null;
+    $hora_cierre = $fila[9];
+    $tiempo_efectivo = $fila[10];
+    $area = isset($fila[11]) ? trim($fila[11]) : 'Sin Asignar';
     /* VALIDAR SI EL TICKET YA EXISTE */
     $checkStmt = $conexion->prepare("SELECT id FROM tickets WHERE ticket_id = ?");
     $checkStmt->bind_param("s", $ticket_id);
@@ -81,15 +77,15 @@ if($checkStmt->num_rows == 0){
         /* NO EXISTE -> INSERT */
         $stmt = $conexion->prepare(
             "INSERT INTO tickets(
-                ticket_id, titulo, estatus, urgencia, usuario, 
+                ticket_id, titulo, estatus, urgencia, usuario, nombre_corto,
                 fecha_crea, hora_crea, fecha_cierre, hora_cierre, tiempo_efectivo, area
             )
-            VALUES(?,?,?,?,?,?,?,?,?,?,?)"
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?)"
         );
 
         $stmt->bind_param(
-            "sssssssssss", // Agregamos una 's' más
-            $ticket_id, $titulo, $estatus, $urgencia, $usuario,
+            "ssssssssssss", // Agregamos una 's' más
+            $ticket_id, $titulo, $estatus, $urgencia, $usuario, $nombre_corto,
             $fecha_crea, $hora_crea, $fecha_cierre, $hora_cierre, $tiempo_efectivo, $area
         );
         
