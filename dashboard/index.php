@@ -189,96 +189,63 @@ href="../assets/css/style.css">
 
     <!-- ACTIVIDAD -->
 
-    <div class="activity-box mt-5">
-
-        <h3 class="mb-4">
-
-            Actividad reciente
-
-        </h3>
-
-        <table class="table align-middle">
-
+    <div class="corporate-card">
+    <h4 class="mb-4">Actividad Reciente</h4>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
             <thead>
-
                 <tr>
-
-                    <th>Evento</th>
-                        
-                    <th>Fecha</th>
-
-                    <th>Estado</th>
-
+                    <th>Usuario</th>
+                    <th>Fecha y Hora</th>
+                    <th>Estatus del Perfil</th>
                 </tr>
-
             </thead>
-
             <tbody>
-
-                <tr>
-
-                    <td>
-
-                        Inicio de sesión
-
-                    </td>
-
-                    <td>
-
-                        <?php
-                        echo $fecha;
-                        ?>
-
-                    </td>
-
-                    <td>
-
-                        <span class="badge bg-success">
-
-                            Correcto
-
-                        </span>
-
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <td>
-
-                        Dashboard cargado
-
-                    </td>
-
-                    <td>
-
-                        <?php
-                        echo $fecha;
-                        ?>
-
-                    </td>
-
-                    <td>
-
-                        <span class="badge bg-primary">
-
-                            Activo
-
-                        </span>
-
-                    </td>
-
-                </tr>
-
-
+                <?php
+                // Consultamos los últimos 5 inicios de sesión uniéndolo con el estatus del usuario
+                $sqlActividad = "SELECT h.nombre_usuario, h.fecha_hora, u.estatus 
+                                 FROM historial_accesos h 
+                                 LEFT JOIN usuarios u ON h.nombre_usuario = u.nombre 
+                                 ORDER BY h.fecha_hora DESC LIMIT 5";
                 
+                $resultActividad = $conexion->query($sqlActividad);
 
+                if($resultActividad && $resultActividad->num_rows > 0){
+                    while($row = $resultActividad->fetch_assoc()){
+                        
+                        // Formateamos la fecha para que se vea bonita
+                        $fecha = date("d/m/Y h:i A", strtotime($row['fecha_hora']));
+                        
+                        // Asignamos el color del badge dependiendo del estatus
+                        $estatus = $row['estatus'] ?? 'Desconocido';
+                        $badgeClass = "bg-secondary"; // Por defecto
+                        
+                        if($estatus == 'Activo'){
+                            $badgeClass = "bg-success";
+                        } elseif($estatus == 'Suspendido'){
+                            $badgeClass = "bg-warning text-dark";
+                        } elseif($estatus == 'Inactivo'){
+                            $badgeClass = "bg-danger";
+                        }
+                ?>
+                <tr>
+                    <td>
+                        <i class="bi bi-person-circle text-primary me-2"></i>
+                        <strong><?php echo $row['nombre_usuario']; ?></strong>
+                    </td>
+                    <td class="text-muted small"><?php echo $fecha; ?></td>
+                    <td><span class="badge <?php echo $badgeClass; ?>"><?php echo $estatus; ?></span></td>
+                </tr>
+                <?php 
+                    } 
+                } else {
+                    echo "<tr><td colspan='3' class='text-center text-muted'>No hay actividad reciente registrada.</td></tr>";
+                }
+                ?>
             </tbody>
-
         </table>
-
     </div>
+</div>
 
 </div>
 <script>

@@ -44,13 +44,7 @@ if(
 
 /* HASH */
 
-$passwordHash =
-password_hash(
-    $password,
-    PASSWORD_DEFAULT
-);
-
-/* INSERT */
+/* INSERT (Sin Hash) */
 
 $stmt =
 $conexion->prepare(
@@ -68,7 +62,7 @@ $stmt->bind_param(
 
     $nombre,
     $email,
-    $passwordHash,
+    $password, 
     $rol
 
 );

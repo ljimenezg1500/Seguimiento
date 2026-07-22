@@ -33,7 +33,7 @@ $totalPaginas = ceil($totalTickets / $limite);
    TICKETS
 ========================================= */
 
-$sql = "SELECT * FROM tickets $where ORDER BY CAST(ticket_id AS UNSIGNED) ASC LIMIT $inicio, $limite";
+$sql = "SELECT * FROM tickets $where ORDER BY CAST(ticket_id AS UNSIGNED) DESC LIMIT $inicio, $limite";
 $resultado = $conexion->query($sql);
 
 ?>

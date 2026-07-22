@@ -1,60 +1,47 @@
 <?php
+// Iniciamos la sesión si no está iniciada aún
+if(session_status() === PHP_SESSION_NONE){
+    session_start();
+}
 
 include("../config/db.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $nombre = trim($_POST['nombre']);
-
     $password = trim($_POST['password']);
 
-    $stmt = $conexion->prepare(
-        "SELECT * FROM usuarios WHERE nombre=?"
-    );
-
+    $stmt = $conexion->prepare("SELECT * FROM usuarios WHERE nombre=?");
     $stmt->bind_param("s", $nombre);
-
     $stmt->execute();
-
     $resultado = $stmt->get_result();
 
     if($resultado->num_rows > 0){
-
         $usuario = $resultado->fetch_assoc();
 
-        if(password_verify(
-            $password,
-            $usuario['password']
-        )){
-
+        if($password === $usuario['password']){
             session_regenerate_id(true);
 
-            $_SESSION['user'] =
-            $usuario['nombre'];
+            $_SESSION['user'] = $usuario['nombre'];
+            $_SESSION['rol'] = $usuario['rol'];
 
-            $_SESSION['rol'] =
-            $usuario['rol'];
+            /* ==================================================
+               NUEVO: REGISTRAMOS EL INICIO DE SESIÓN EN EL HISTORIAL
+               ================================================== */
+            $usuarioActivo = $conexion->real_escape_string($usuario['nombre']);
+            $sqlHistorial = "INSERT INTO historial_accesos (nombre_usuario) VALUES ('$usuarioActivo')";
+            $conexion->query($sqlHistorial);
+            /* ================================================== */
 
-            header(
-                "Location: ../dashboard/index.php"
-            );
-
+            header("Location: ../dashboard/index.php");
             exit();
 
         }else{
-
-            $error =
-            "Contraseña incorrecta";
-
+            $error = "Contraseña incorrecta";
         }
-
     }else{
-
-        $error =
-        "Usuario no encontrado";
-
+        $error = "Usuario no encontrado";
     }
-
 }
 ?>
 

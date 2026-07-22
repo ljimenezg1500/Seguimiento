@@ -29,12 +29,12 @@ if(session_status() === PHP_SESSION_NONE){
 
     <ul class="sidebar-menu">
 
-        <!-- DASHBOARD -->
+        <!-- DASHBOARD (HOME) -->
 
         <li>
 
             <a
-            href="../dashboard/index.php"
+            href="/CRUD/dashboard/index.php"
 
             class="<?php
             echo basename($_SERVER['PHP_SELF']) == 'index.php'
@@ -52,13 +52,13 @@ if(session_status() === PHP_SESSION_NONE){
 
         </li>
 
-        <!-- USUARIOS -->
-
-        <li>
+        <!-- SOLO ADMIN: USUARIOS Y TICKETS -->
 
         <?php if($_SESSION['rol'] == 'admin'){ ?>
 
-            <a href="../usuarios/index.php"
+        <li>
+
+            <a href="/CRUD/usuarios/index.php"
 
             class="<?php
             echo strpos(
@@ -77,87 +77,22 @@ if(session_status() === PHP_SESSION_NONE){
 
         </li>
         
-
         <li>
 
-    <a
-    href="../tickets/index.php"
+            <a
+            href="/CRUD/tickets/index.php"
 
-    class="<?php
+            class="<?php
+            echo basename($_SERVER['PHP_SELF']) == 'index.php'
+            &&
+            strpos($_SERVER['REQUEST_URI'], 'tickets')
+            ? 'active'
+            : '';
+            ?>">
 
-echo
-basename($_SERVER['PHP_SELF'])
-== 'index.php'
+                <i class="bi bi-ticket-detailed-fill"></i>
 
-&&
-
-strpos(
-    $_SERVER['REQUEST_URI'],
-    'tickets'
-)
-?
-'active'
-:
-''
-?>">
-
-        <i class="bi bi-ticket-detailed-fill"></i>
-
-        Tickets
-
-    </a>
-
-</li>
-
-<?php } ?>
-
-<li>
-
-    <a
-    href="../tickets/dashboard.php"
-
-    class="<?php
-
-echo
-basename($_SERVER['PHP_SELF'])
-== 'dashboard.php'
-
-&&
-
-strpos(
-    $_SERVER['REQUEST_URI'],
-    'tickets'
-)
-
-?
-
-'active'
-
-:
-
-''
-
-?>">
-
-        <i class="bi bi-bar-chart-fill"></i>
-
-        Estadisticas
-
-    </a>
-
-</li>
-
-        <!-- SOLO ADMIN -->
-
-        <?php if($_SESSION['rol'] == 'admin'){ ?>
-
-        <li>
-
-            <a href="#">
-
-                <i class="bi bi-shield-lock-fill"></i>
-
-                Administración
+                Tickets
 
             </a>
 
@@ -165,18 +100,46 @@ strpos(
 
         <?php } ?>
 
-        <!-- CONFIGURACION -->
+        <!-- ESTADÍSTICAS -->
 
         <li>
 
-            <a href="#">
+            <a
+            href="/CRUD/tickets/dashboard.php"
 
-                <i class="bi bi-gear-fill"></i>
+            class="<?php
+            echo basename($_SERVER['PHP_SELF']) == 'dashboard.php'
+            &&
+            strpos($_SERVER['REQUEST_URI'], 'tickets')
+            ? 'active'
+            : '';
+            ?>">
 
-                Configuración
+                <i class="bi bi-bar-chart-fill"></i>
+
+                Estadisticas
 
             </a>
 
+        </li>
+
+       <!-- SOLO ADMIN: ADMINISTRACIÓN -->
+        <?php if($_SESSION['rol'] == 'admin'){ ?>
+        <li>
+            <a href="/CRUD/administracion/index.php">
+                <i class="bi bi-shield-lock-fill"></i>
+                Administración
+            </a>
+        </li>
+        <?php } ?>
+
+        <!-- CONFIGURACION -->
+        
+        <li>
+            <a href="/CRUD/config/config_dash/index.php">
+                <i class="bi bi-gear-fill"></i>
+                Configuración
+            </a>
         </li>
 
     </ul>
@@ -214,7 +177,7 @@ strpos(
         <!-- LOGOUT -->
 
         <a
-        href="../auth/logout.php"
+        href="/CRUD/auth/logout.php"
         class="btn-logout-sidebar">
 
             <i class="bi bi-box-arrow-left"></i>

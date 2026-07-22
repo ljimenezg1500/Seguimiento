@@ -65,13 +65,11 @@ trim($_POST['rol']);
 
 /* PASSWORD NUEVO */
 
+/* PASSWORD NUEVO */
+
 if(!empty($_POST['password'])){
 
-    $password =
-    password_hash(
-        $_POST['password'],
-        PASSWORD_DEFAULT
-    );
+    $password = trim($_POST['password']);
 
     $stmt =
     $conexion->prepare(
