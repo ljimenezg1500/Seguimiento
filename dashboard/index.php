@@ -1,15 +1,10 @@
 <?php
-
 include("../config/db.php");
-
 /* PROTEGER SESION */
 
 if(!isset($_SESSION['user'])){
-
     header("Location: ../auth/login.php");
-
     exit();
-
 }
 
 /* TOTAL USUARIOS */
@@ -57,80 +52,49 @@ href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
 rel="stylesheet">
 
 <!-- CSS -->
-
 <link
 rel="stylesheet"
 href="../assets/css/style.css">
-
 </head>
 
 <body>
-
 <!-- SIDEBAR -->
-
 <?php include("../includes/sidebar.php"); ?>
-
 <!-- CONTENIDO -->
-
 <div class="content">
-
     <!-- HEADER -->
-
     <div class="dashboard-header">
-
         <div>
-
             <h1 class="dashboard-title">
-
                 Reportes de Tickets
-
             </h1>
-
             <p class="dashboard-subtitle">
-
-                Bienvenido nuevamente
+                Bienvenido 
                 <strong>
-
                     <?php
                     echo $_SESSION['user'];
                     ?>
-
                 </strong>
-
             </p>
-
         </div>
-
     </div>
 
     <!-- TARJETAS -->
-
     <div class="row g-4">
-
         <!-- USUARIOS -->
-
         <div class="col-md-4">
-
             <div class="dashboard-card users-card">
-
                 <div>
-
                     <h5>
-
                         Usuarios
-
                     </h5>
-
                     <h2>
-
                         <?php
                         echo $totalUsuarios;
                         ?>
-
                     </h2>
 
                 </div>
-
                 <i class="bi bi-people-fill"></i>
 
             </div>

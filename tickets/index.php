@@ -185,7 +185,7 @@ href="../assets/css/style.css">
             <table class="table table-hover">
     <thead>
         <tr>
-            <th>ID</th>
+        
             <th>Usuario</th>
             <th>Area</th>
             <th>Tipo</th>
@@ -197,7 +197,7 @@ href="../assets/css/style.css">
         while( $ticket = $resultado->fetch_assoc() ){
         ?>
         <tr>
-            <td><?php echo $ticket['ticket_id']; ?></td>
+            
             <td><?php echo $ticket['usuario']; ?></td>
             <td><?php echo $ticket['area']; ?></td>
             <td><?php echo $ticket['titulo']; ?></td>

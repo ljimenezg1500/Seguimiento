@@ -53,6 +53,8 @@ $where";
 $resultTotal = $conexion->query($sqlTotal);
 $total = $resultTotal ? $resultTotal->fetch_assoc()['total'] : 0;
 
+
+
 /* =========================================
    TOP USUARIOS
 ========================================= */
@@ -72,9 +74,11 @@ $usuarios = [];
 $cantidades = [];
 
 if($resultUsuarios){
+
     while($fila = $resultUsuarios->fetch_assoc()){
         $usuarios[] = $fila['usuario'];
         $cantidades[] = $fila['total'];
+
     }
 }
 
@@ -114,6 +118,8 @@ FROM tickets
 $where
 AND tiempo_efectivo IS NOT NULL 
 AND tiempo_efectivo != ''
+AND tiempo_efectivo != '00:00'
+AND LOWER(estatus) LIKE '%cerrado%'
 GROUP BY area
 ORDER BY total_minutos DESC
 ";
@@ -205,11 +211,13 @@ href="../assets/css/style.css">
 <div class="content">
 
     <!-- HEADER -->
-
     <div class="page-header">
         <div>
+
             <h1 class="page-title">Estadisticas</h1>
             <p class="page-subtitle">Filtros</p>
+
+  
         </div>
     </div>
 
@@ -218,6 +226,7 @@ href="../assets/css/style.css">
     <div class="corporate-card mb-4">
 
         <form method="GET" class="row g-3">
+<<<<<<< HEAD
 
             <!-- MESES CON CHECKBOXES -->
             <div class="col-md-5">
@@ -283,6 +292,7 @@ href="../assets/css/style.css">
                 </div>
             </div>
 
+<<<<<<< HEAD
             <!-- BOTONES -->
             <div class="col-md-2 d-flex flex-column justify-content-end gap-2">
                 <button type="submit" class="btn-corporate w-100" style="height: 40px;">
@@ -292,11 +302,45 @@ href="../assets/css/style.css">
                 <a href="exportar_excel.php?<?php echo http_build_query(['mes' => $mesesFiltro, 'area' => $areasFiltro]); ?>" class="btn-corporate w-100 text-center text-decoration-none d-flex align-items-center justify-content-center" style="background: #2ed573; height: 40px;">
                     <i class="bi bi-file-earmark-excel-fill me-2"></i> Exportar
                 </a>
+=======
+            <div class="col-md-3">
+        <label class="form-label">Área</label>
+        <select name="area" class="form-select">
+            <option value="todas" <?php if($areaFiltro == 'todas') echo 'selected'; ?>>Todas las áreas</option>
+            <option value="KOF" <?php if($areaFiltro == 'KOF') echo 'selected'; ?>>KOF</option>
+            <option value="KFC" <?php if($areaFiltro == 'KFC') echo 'selected'; ?>>KFC</option>
+            <option value="REVENUE" <?php if($areaFiltro == 'REVENUE') echo 'selected'; ?>>REVENUE</option>
+            <option value="ADMIN Y FINANZAS" <?php if($areaFiltro == 'ADMIN Y FINANZAS') echo 'selected'; ?>>ADMIN Y FINANZAS</option>
+            <option value="GOBIERNO" <?php if($areaFiltro == 'GOBIERNO') echo 'selected'; ?>>GOBIERNO</option>
+            <option value="DIGITAL" <?php if($areaFiltro == 'DIGITAL') echo 'selected'; ?>>DIGITAL</option>
+            <option value="IP" <?php if($areaFiltro == 'IP') echo 'selected'; ?>>IP</option>
+            <option value="EJECUCION IMPECABLE" <?php if($areaFiltro == 'EJECUCION IMPECABLE') echo 'selected'; ?>>EJECUCUCION IMPECABLE</option>
+            <option value="INNOVACION" <?php if($areaFiltro == 'INNOVACION') echo 'selected'; ?>>INNOVACION</option>
+            <option value="SISTEMAS" <?php if($areaFiltro == 'SISTEMAS') echo 'selected'; ?>>SISTEMAS</option>
+            <option value="RADIO" <?php if($areaFiltro == 'RADIO') echo 'selected'; ?>>RADIO</option>
+            <option value="EXTERIORES" <?php if($areaFiltro == 'EXTERIORES') echo 'selected'; ?>>EXTERIORES</option>
+            <option value="MENSAJERO" <?php if($areaFiltro == 'MENSAJERO') echo 'selected'; ?>>MENSAJERO</option>
+            <option value="PLANEACION" <?php if($areaFiltro == 'PLANEACION') echo 'selected'; ?>>PLANEACION</option>
+            </select>
+    </div>
+
+            <!-- BOTON -->
+
+            <div class="col-md-3 d-flex align-items-end gap-2">
+                <button type="submit" class="btn-corporate w-50">
+                    <i class="bi bi-funnel-fill"></i> Filtrar
+                </button>
+                
+                <button type="submit" formaction="exportar_excel.php" class="btn-corporate w-50 text-center" style="background: #2ed573; color: white;">
+                    <i class="bi bi-file-earmark-excel-fill"></i> Exportar
+                </button>
+>>>>>>> 39ca3ca9b266516d1c4761f8d326698f4b8eb84d
             </div>
 
         </form>
     </div>
 
+<<<<<<< HEAD
     <!-- INDICADORES GLOBALES (KPIs) -->
     <div class="row g-4 mb-4 text-center">
         <!-- Tarjeta de Tickets Encontrados -->
@@ -346,11 +390,45 @@ href="../assets/css/style.css">
                 <h4 class="mb-4">Top usuarios</h4>
                 <canvas id="usuariosChart"></canvas>
             </div>
+=======
+    <!-- TOTAL -->
+
+    <div class="corporate-card mb-5 text-center">
+
+        <h2 class="big-number">
+
+            <?php echo $total; ?>
+
+        </h2>
+
+        <p>
+
+            Tickets encontrados
+
+        </p>
+
+    </div>
+
+    <!-- GRAFICAS -->
+
+    <div class="row g-4">
+
+        <!-- TOP USUARIOS -->
+
+        <div class="col-lg-7">
+            <div class="corporate-card">
+                <h4 class="mb-4">
+                    Top usuarios <?php echo ($mes != 'todos' && isset($meses[$mes])) ? '- ' . $meses[$mes] . ' ' . date('Y') : ''; ?>
+                </h4>
+                <canvas id="usuariosChart"></canvas>
+            </div>
+>>>>>>> 39ca3ca9b266516d1c4761f8d326698f4b8eb84d
         </div>
 
         <!-- URGENCIAS -->
         <div class="col-lg-5">
             <div class="corporate-card">
+<<<<<<< HEAD
                 <h4 class="mb-4">Urgencias</h4>
                 <canvas id="urgenciasChart"></canvas>
             </div>
@@ -358,16 +436,47 @@ href="../assets/css/style.css">
     </div>
 
     <div class="row g-4 mt-2">
+=======
+                <h4 class="mb-4">
+                    Urgencia <?php echo ($mes != 'todos' && isset($meses[$mes])) ? '- ' . $meses[$mes] . ' ' . date('Y') : ''; ?>
+                </h4>
+                <canvas id="urgenciasChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- TICKETS SUBIDOS POR AREA -->
+
+    <div class="row g-4 mt-2">
+        <div class="col-lg-12">
+            <div class="corporate-card">
+                <h4 class="mb-4">
+                    Tickets subidos por Área <?php echo ($mes != 'todos' && isset($meses[$mes])) ? '- ' . $meses[$mes] . ' ' . date('Y') : ''; ?>
+                </h4>
+                <canvas id="ticketsPorAreaChart" style="max-height: 350px;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-2">
+        
+            <!-- TIEMPO TOATAL INVERTIDO -->
+>>>>>>> 39ca3ca9b266516d1c4761f8d326698f4b8eb84d
         <div class="col-lg-6">
             <div class="corporate-card">
-                <h4 class="mb-4">Tiempo Total Invertido (Minutos)</h4>
+                <h4 class="mb-4">
+                    Tiempo Total Invertido (Minutos) <?php echo ($mes != 'todos' && isset($meses[$mes])) ? '- ' . $meses[$mes] . ' ' . date('Y') : ''; ?>
+                </h4>
                 <canvas id="tiempoTotalChart"></canvas>
             </div>
         </div>
 
+                <!-- TIEMPO PROMEDIO POR TICKET(MIN) -->
         <div class="col-lg-6">
             <div class="corporate-card">
-                <h4 class="mb-4">Tiempo Promedio por Ticket (Min)</h4>
+                <h4 class="mb-4">
+                    Tiempo Promedio por Ticket (Min) <?php echo ($mes != 'todos' && isset($meses[$mes])) ? '- ' . $meses[$mes] . ' ' . date('Y') : ''; ?>
+                </h4>
                 <canvas id="tiempoPromedioChart"></canvas>
             </div>
         </div>
@@ -384,6 +493,7 @@ const gradientUsuarios = ctxUsuarios.createLinearGradient(0, 0, 0, 400);
 gradientUsuarios.addColorStop(0, '#3498db'); 
 gradientUsuarios.addColorStop(1, '#2c3e50'); 
 
+<<<<<<< HEAD
 new Chart(ctxUsuarios, {
     type: 'bar',
     data: {
@@ -399,6 +509,65 @@ new Chart(ctxUsuarios, {
     options: {
         plugins: {
             legend: { display: false } 
+=======
+/* TOP USUARIOS */
+
+new Chart(
+
+document.getElementById(
+'usuariosChart'
+),
+
+{
+    type:'bar',
+    data:{
+        labels:
+        <?php echo json_encode($usuarios); ?>,
+        datasets:[{
+            data:
+            <?php echo json_encode($cantidades); ?>,
+            borderRadius:10
+        }]
+    }
+});
+
+/* URGENCIAS */
+
+new Chart(
+document.getElementById(
+'urgenciasChart'
+),
+{
+    type:'doughnut',
+    data:{
+        labels:
+        <?php echo json_encode($urgencias); ?>,
+        datasets:[{
+            data:
+            <?php
+            echo json_encode(
+                $cantidadUrgencias
+            );
+            ?>
+        }]
+    }
+});
+
+/* TIEMPO TOTAL INVERTIDO (DOUGHNUT) */
+new Chart(
+    document.getElementById('tiempoTotalChart'),
+    {
+        type: 'doughnut',
+        data: {
+            labels: <?php echo json_encode($areasTiempo); ?>,
+            datasets: [{
+                data: <?php echo json_encode($totalMinutosArea); ?>,
+                backgroundColor: [
+                    '#3742fa', '#2ed573', '#ff4757', '#ffa502', '#5352ed', 
+                    '#ff7f50', '#2f3542', '#1e90ff', '#eccc68'
+                ]
+            }]
+>>>>>>> 39ca3ca9b266516d1c4761f8d326698f4b8eb84d
         },
         scales: {
             y: {
@@ -579,6 +748,43 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 });
+
+/* TICKETS POR ÁREA (BARRA) */
+new Chart(
+    document.getElementById('ticketsPorAreaChart'),
+    {
+        type: 'bar',
+        data: {
+            labels: <?php echo json_encode($areasNombres); ?>,
+            datasets: [{
+                label: 'Cantidad de Tickets',
+                data: <?php echo json_encode($areasCantidades); ?>,
+                backgroundColor: '#2ed573', /* Un color verde para destacar, puedes cambiarlo */
+                borderRadius: 5
+            }]
+        },
+        options: {
+            plugins: {
+                legend: { display: false }, /* Ocultamos la leyenda superior porque ya es intuitivo */
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.raw + ' tickets';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1 // Para que no muestre decimales en la cantidad de tickets
+                    }
+                }
+            }
+        }
+    }
+);
 
 </script>
 </body>
