@@ -1,6 +1,7 @@
 <?php
 include("../config/db.php");
 include("../includes/permisos.php");
+include("../includes/log_bitacora.php");
 
 if(session_status() === PHP_SESSION_NONE){
     session_start();
@@ -16,6 +17,9 @@ if(!isset($_SESSION['user']) || !esAdmin()){
 $sql = "TRUNCATE TABLE tickets";
 
 if($conexion->query($sql)){
+    /* REGISTRAR EN BITÁCORA */
+    registrarBitacora($conexion, $_SESSION['user'], 'Vaciar Base de Datos', 'Ejecutó un TRUNCATE. Borró todos los tickets del sistema de forma permanente.');
+    
     echo "Todos los tickets han sido eliminados correctamente y la tabla ha sido reiniciada.";
 } else {
     echo "Ocurrió un error al intentar vaciar la tabla: " . $conexion->error;

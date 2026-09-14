@@ -46,37 +46,70 @@ if(!esAdmin()){
     <!-- HEADER -->
     <div class="page-header">
         <div>
-            <h1 class="page-title text-danger"><i class="bi bi-shield-lock-fill"></i> Administración Avanzada</h1>
-            <p class="page-subtitle">Zona de peligro: Modificación directa a la base de datos</p>
+            <h1 class="page-title text-dark"><i class="bi bi-shield-lock-fill"></i> Administración</h1>
+            <p class="page-subtitle">Configuraciones personalizadas</p>
         </div>
     </div>
+
+    
+    
 
     <div class="row g-4">
         
         <!-- ZONA DE PELIGRO: VACIAR TICKETS -->
         <div class="col-md-6">
-            <div class="corporate-card border-danger border-top border-3 shadow-sm h-100">
+            <div class="corporate-card border-danger border-top border-3 shadow-sm h-100 d-flex flex-column">
                 <h4 class="text-danger mb-3"><i class="bi bi-exclamation-triangle-fill"></i> Vaciar Base de Datos</h4>
                 <p class="text-muted">
                     Esta acción ejecutará un <strong>TRUNCATE</strong> en la tabla de tickets. Eliminará absolutamente todos los registros existentes y reiniciará el contador de IDs a cero. 
                     <br><br>
                     <em>Esta acción no se puede deshacer.</em>
                 </p>
-                <button class="btn btn-danger w-100 mt-2" onclick="vaciarTickets()">
+                <!-- Agregamos mt-auto para empujar el botón al fondo -->
+                <button class="btn btn-danger w-100 mt-auto" onclick="vaciarTickets()">
                     <i class="bi bi-trash3-fill"></i> Eliminar TODOS los tickets
                 </button>
             </div>
         </div>
 
-        <!-- AQUÍ AGREGAREMOS MÁS FUNCIONES DESPUÉS -->
+        <!-- GESTIÓN DE USUARIOS -->
         <div class="col-md-6">
-            <div class="corporate-card shadow-sm h-100 d-flex align-items-center justify-content-center">
-                <p class="text-muted m-0"><i class="bi bi-tools"></i> Más herramientas de administración próximamente...</p>
+            <div class="corporate-card border-primary border-top border-3 shadow-sm h-100 d-flex flex-column">
+                <h4 class="text-primary mb-3"><i class="bi bi-people-fill"></i> Gestión de Usuarios</h4>
+                <p class="text-muted">
+                    Administra los accesos al sistema. Puedes agregar nuevos usuarios, editar sus roles, contraseñas o eliminarlos permanentemente de la base de datos.
+                </p>
+                <!-- Agregamos mt-auto para empujar el botón al fondo -->
+                <a href="/CRUD/administracion/usuarios/index.php" class="btn btn-primary w-100 mt-auto">
+                    <i class="bi bi-person-gear"></i> Administrar Usuarios
+                </a>
             </div>
+
+            
         </div>
 
+        
+
+
+
+    </div>
+    <!-- NUEVA FILA PARA LA BITÁCORA -->
+    <div class="row mt-2">
+        <div class="col-12">
+            <div class="corporate-card border-warning border-top border-3 shadow-sm d-flex flex-column">
+                <h4 class="mb-3" style="color: #f39c12;"><i class="bi bi-journal-text"></i> Bitácora de Auditoría</h4>
+                <p class="text-muted">
+                    Monitorea cada movimiento estratégico del sistema. Registra exactamente quién exporta o importa tickets, quién modifica permisos de usuarios, cambios de contraseña y más.
+                </p>
+                <a href="/CRUD/administracion/bitacora/index.php" class="btn btn-warning w-100 mt-auto fw-bold text-dark">
+                    <i class="bi bi-eye-fill"></i> Revisar Historial Completo
+                </a>
+            </div>
+        </div>
     </div>
 </div>
+
+
 
 <script>
 /* ========================================

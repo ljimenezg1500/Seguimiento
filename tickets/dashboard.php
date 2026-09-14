@@ -53,8 +53,6 @@ $where";
 $resultTotal = $conexion->query($sqlTotal);
 $total = $resultTotal ? $resultTotal->fetch_assoc()['total'] : 0;
 
-
-
 /* =========================================
    TOP USUARIOS
 ========================================= */
@@ -74,11 +72,9 @@ $usuarios = [];
 $cantidades = [];
 
 if($resultUsuarios){
-
     while($fila = $resultUsuarios->fetch_assoc()){
         $usuarios[] = $fila['usuario'];
         $cantidades[] = $fila['total'];
-
     }
 }
 
@@ -171,37 +167,46 @@ if($resultTicketsArea){
     }
 }
 
+/* =========================================
+   PROMEDIO DE RESPUESTA POR URGENCIA
+========================================= */
+$sqlPromedioUrgencia = "
+SELECT 
+    urgencia, 
+    AVG(TIME_TO_SEC(STR_TO_DATE(tiempo_efectivo, '%H:%i'))) / 60 as promedio
+FROM tickets
+$where
+AND tiempo_efectivo IS NOT NULL 
+AND tiempo_efectivo != ''
+AND tiempo_efectivo != '00:00'
+AND LOWER(estatus) LIKE '%cerrado%'
+GROUP BY urgencia
+ORDER BY promedio DESC
+";
+
+$resultPromedioUrgencia = $conexion->query($sqlPromedioUrgencia);
+$tiemposUrgencia = [];
+
+if($resultPromedioUrgencia){
+    while($fila = $resultPromedioUrgencia->fetch_assoc()){
+        $tiemposUrgencia[$fila['urgencia']] = round($fila['promedio']);
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
-
 <meta charset="UTF-8">
-
 <link rel="icon" type="image/x-icon" href="/CRUD/assets/chivas.ico">
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Tickets</title>
-
-<link
-href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-rel="stylesheet">
-
-<link
-href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
-rel="stylesheet">
-
-<link
-rel="stylesheet"
-href="../assets/css/style.css">
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </head>
 
 <body class="corporate-body">
@@ -213,20 +218,14 @@ href="../assets/css/style.css">
     <!-- HEADER -->
     <div class="page-header">
         <div>
-
             <h1 class="page-title">Estadisticas</h1>
             <p class="page-subtitle">Filtros</p>
-
-  
         </div>
     </div>
 
     <!-- FILTROS -->
-
     <div class="corporate-card mb-4">
-
         <form method="GET" class="row g-3">
-<<<<<<< HEAD
 
             <!-- MESES CON CHECKBOXES -->
             <div class="col-md-5">
@@ -292,55 +291,22 @@ href="../assets/css/style.css">
                 </div>
             </div>
 
-<<<<<<< HEAD
             <!-- BOTONES -->
-            <div class="col-md-2 d-flex flex-column justify-content-end gap-2">
-                <button type="submit" class="btn-corporate w-100" style="height: 40px;">
-                    <i class="bi bi-funnel-fill"></i> Filtrar
+            <div class="col-md-2 d-flex flex-column justify-content-center gap-3 mt-4">
+                
+                <button type="submit" class="btn-corporate w-100 d-flex align-items-center justify-content-center fs-6 fw-bold" style="height: 55px;">
+                    <i class="bi bi-funnel-fill me-2"></i> Filtrar
                 </button>
                 
-                <a href="exportar_excel.php?<?php echo http_build_query(['mes' => $mesesFiltro, 'area' => $areasFiltro]); ?>" class="btn-corporate w-100 text-center text-decoration-none d-flex align-items-center justify-content-center" style="background: #2ed573; height: 40px;">
+                <a href="exportar_excel.php?<?php echo http_build_query(['mes' => $mesesFiltro, 'area' => $areasFiltro]); ?>" class="btn-corporate w-100 text-decoration-none d-flex align-items-center justify-content-center fs-6 fw-bold" style="background: #2ed573; height: 55px; color: white;">
                     <i class="bi bi-file-earmark-excel-fill me-2"></i> Exportar
                 </a>
-=======
-            <div class="col-md-3">
-        <label class="form-label">Área</label>
-        <select name="area" class="form-select">
-            <option value="todas" <?php if($areaFiltro == 'todas') echo 'selected'; ?>>Todas las áreas</option>
-            <option value="KOF" <?php if($areaFiltro == 'KOF') echo 'selected'; ?>>KOF</option>
-            <option value="KFC" <?php if($areaFiltro == 'KFC') echo 'selected'; ?>>KFC</option>
-            <option value="REVENUE" <?php if($areaFiltro == 'REVENUE') echo 'selected'; ?>>REVENUE</option>
-            <option value="ADMIN Y FINANZAS" <?php if($areaFiltro == 'ADMIN Y FINANZAS') echo 'selected'; ?>>ADMIN Y FINANZAS</option>
-            <option value="GOBIERNO" <?php if($areaFiltro == 'GOBIERNO') echo 'selected'; ?>>GOBIERNO</option>
-            <option value="DIGITAL" <?php if($areaFiltro == 'DIGITAL') echo 'selected'; ?>>DIGITAL</option>
-            <option value="IP" <?php if($areaFiltro == 'IP') echo 'selected'; ?>>IP</option>
-            <option value="EJECUCION IMPECABLE" <?php if($areaFiltro == 'EJECUCION IMPECABLE') echo 'selected'; ?>>EJECUCUCION IMPECABLE</option>
-            <option value="INNOVACION" <?php if($areaFiltro == 'INNOVACION') echo 'selected'; ?>>INNOVACION</option>
-            <option value="SISTEMAS" <?php if($areaFiltro == 'SISTEMAS') echo 'selected'; ?>>SISTEMAS</option>
-            <option value="RADIO" <?php if($areaFiltro == 'RADIO') echo 'selected'; ?>>RADIO</option>
-            <option value="EXTERIORES" <?php if($areaFiltro == 'EXTERIORES') echo 'selected'; ?>>EXTERIORES</option>
-            <option value="MENSAJERO" <?php if($areaFiltro == 'MENSAJERO') echo 'selected'; ?>>MENSAJERO</option>
-            <option value="PLANEACION" <?php if($areaFiltro == 'PLANEACION') echo 'selected'; ?>>PLANEACION</option>
-            </select>
-    </div>
-
-            <!-- BOTON -->
-
-            <div class="col-md-3 d-flex align-items-end gap-2">
-                <button type="submit" class="btn-corporate w-50">
-                    <i class="bi bi-funnel-fill"></i> Filtrar
-                </button>
                 
-                <button type="submit" formaction="exportar_excel.php" class="btn-corporate w-50 text-center" style="background: #2ed573; color: white;">
-                    <i class="bi bi-file-earmark-excel-fill"></i> Exportar
-                </button>
->>>>>>> 39ca3ca9b266516d1c4761f8d326698f4b8eb84d
             </div>
 
         </form>
     </div>
 
-<<<<<<< HEAD
     <!-- INDICADORES GLOBALES (KPIs) -->
     <div class="row g-4 mb-4 text-center">
         <!-- Tarjeta de Tickets Encontrados -->
@@ -353,23 +319,38 @@ href="../assets/css/style.css">
         
         <!-- Tarjeta de Promedio de Respuesta -->
         <div class="col-md-6">
-            <div class="corporate-card h-100">
-                <?php 
-                $colorClase = "";
-                if($promedioGlobal < 90){
-                    $colorClase = "text-success"; // Verde
-                } elseif($promedioGlobal < 120){
-                    $colorClase = "text-warning"; // Amarillo
-                } else {
-                    $colorClase = "text-danger";  // Rojo
-                }
-                ?>
-                <h2 class="big-number <?php echo $colorClase; ?>">
-                    <?php echo $promedioGlobal; ?> 
-                </h2>
-                <p class="m-0">Promedio global de respuesta</p>
-            </div>
-        </div>
+    <div class="corporate-card h-100">
+        <?php 
+        // 1. Lógica de colores (Se queda igual, evalúa el total de minutos)
+        $colorClase = "";
+        if($promedioGlobal < 90){
+            $colorClase = "text-success"; // Verde
+        } elseif($promedioGlobal < 120){
+            $colorClase = "text-warning"; // Amarillo
+        } else {
+            $colorClase = "text-danger";  // Rojo
+        }
+
+        // 2. NUEVA LÓGICA: Formateo de tiempo (Horas y Minutos)
+        if($promedioGlobal >= 60){
+            $horas = floor($promedioGlobal / 60); // Calculamos las horas enteras
+            $minutosRestantes = $promedioGlobal % 60; // Calculamos los minutos que sobran
+            
+            // Usamos str_pad para que si sobran 5 min, se vea "1:05 hrs" en lugar de "1:5 hrs"
+            $textoPromedio = $horas . ":" . str_pad($minutosRestantes, 2, "0", STR_PAD_LEFT) . " hrs";
+        } else {
+            // Si es menor a 60, solo mostramos los minutos
+            $textoPromedio = $promedioGlobal . " min";
+        }
+        ?>
+        
+        <!-- 3. Imprimimos el resultado formateado -->
+        <h2 class="big-number <?php echo $colorClase; ?>">
+            <?php echo $textoPromedio; ?> 
+        </h2>
+        <p class="m-0">Promedio de respuesta</p>
+    </div>
+</div>
     </div>
 
     <!-- NUEVA GRÁFICA: TICKETS POR ÁREA -->
@@ -390,93 +371,71 @@ href="../assets/css/style.css">
                 <h4 class="mb-4">Top usuarios</h4>
                 <canvas id="usuariosChart"></canvas>
             </div>
-=======
-    <!-- TOTAL -->
-
-    <div class="corporate-card mb-5 text-center">
-
-        <h2 class="big-number">
-
-            <?php echo $total; ?>
-
-        </h2>
-
-        <p>
-
-            Tickets encontrados
-
-        </p>
-
-    </div>
-
-    <!-- GRAFICAS -->
-
-    <div class="row g-4">
-
-        <!-- TOP USUARIOS -->
-
-        <div class="col-lg-7">
-            <div class="corporate-card">
-                <h4 class="mb-4">
-                    Top usuarios <?php echo ($mes != 'todos' && isset($meses[$mes])) ? '- ' . $meses[$mes] . ' ' . date('Y') : ''; ?>
-                </h4>
-                <canvas id="usuariosChart"></canvas>
-            </div>
->>>>>>> 39ca3ca9b266516d1c4761f8d326698f4b8eb84d
         </div>
 
         <!-- URGENCIAS -->
-        <div class="col-lg-5">
+        <!-- URGENCIAS Y PROMEDIOS -->
+        <div class="col-lg-5 d-flex flex-column gap-4">
+            
+            <!-- 1. GRÁFICA URGENCIAS -->
             <div class="corporate-card">
-<<<<<<< HEAD
                 <h4 class="mb-4">Urgencias</h4>
                 <canvas id="urgenciasChart"></canvas>
             </div>
-        </div>
-    </div>
 
-    <div class="row g-4 mt-2">
-=======
-                <h4 class="mb-4">
-                    Urgencia <?php echo ($mes != 'todos' && isset($meses[$mes])) ? '- ' . $meses[$mes] . ' ' . date('Y') : ''; ?>
-                </h4>
-                <canvas id="urgenciasChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- TICKETS SUBIDOS POR AREA -->
-
-    <div class="row g-4 mt-2">
-        <div class="col-lg-12">
+            <!-- 2. TIEMPO PROMEDIO POR URGENCIA -->
             <div class="corporate-card">
-                <h4 class="mb-4">
-                    Tickets subidos por Área <?php echo ($mes != 'todos' && isset($meses[$mes])) ? '- ' . $meses[$mes] . ' ' . date('Y') : ''; ?>
-                </h4>
-                <canvas id="ticketsPorAreaChart" style="max-height: 350px;"></canvas>
+                <h5 class="mb-3 text-muted"><i class="bi bi-stopwatch text-primary"></i> Promedio de Respuesta</h5>
+                <ul class="list-group list-group-flush mt-2">
+                    <?php 
+                    if(!empty($tiemposUrgencia)){
+                        foreach($tiemposUrgencia as $urgencia => $minutos){
+                            
+                            // 1. Formateo de horas y minutos inteligente
+                            if($minutos >= 60){
+                                $horas = floor($minutos / 60);
+                                $minutosRestantes = $minutos % 60;
+                                $tiempoTexto = $horas . ":" . str_pad($minutosRestantes, 2, "0", STR_PAD_LEFT) . " hrs";
+                            } else {
+                                $tiempoTexto = $minutos . " min";
+                            }
+
+                            // 2. Asignar un color semántico al punto (rojo=Alta, amarillo=Media, verde=Baja)
+                            $iconColor = "text-secondary";
+                            if(stripos($urgencia, 'alta') !== false) $iconColor = "text-danger";
+                            if(stripos($urgencia, 'media') !== false) $iconColor = "text-warning";
+                            if(stripos($urgencia, 'baja') !== false) $iconColor = "text-success";
+                            
+                            // 3. Imprimir el elemento de la lista
+                            echo "
+                            <li class='list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-bottom-0'>
+                                <span><i class='bi bi-circle-fill $iconColor me-2' style='font-size: 0.6rem;'></i> " . ucfirst(strtolower($urgencia)) . "</span>
+                                <span class='fw-bold fs-5'>$tiempoTexto</span>
+                            </li>";
+                        }
+                    } else {
+                        echo "<li class='list-group-item px-0 text-muted border-bottom-0'>No hay datos para calcular el promedio</li>";
+                    }
+                    ?>
+                </ul>
             </div>
+
         </div>
     </div>
 
     <div class="row g-4 mt-2">
-        
-            <!-- TIEMPO TOATAL INVERTIDO -->
->>>>>>> 39ca3ca9b266516d1c4761f8d326698f4b8eb84d
+        <!-- TIEMPO TOATAL INVERTIDO -->
         <div class="col-lg-6">
             <div class="corporate-card">
-                <h4 class="mb-4">
-                    Tiempo Total Invertido (Minutos) <?php echo ($mes != 'todos' && isset($meses[$mes])) ? '- ' . $meses[$mes] . ' ' . date('Y') : ''; ?>
-                </h4>
+                <h4 class="mb-4">Tiempo Total Invertido (Minutos)</h4>
                 <canvas id="tiempoTotalChart"></canvas>
             </div>
         </div>
 
-                <!-- TIEMPO PROMEDIO POR TICKET(MIN) -->
+        <!-- TIEMPO PROMEDIO POR TICKET(MIN) -->
         <div class="col-lg-6">
             <div class="corporate-card">
-                <h4 class="mb-4">
-                    Tiempo Promedio por Ticket (Min) <?php echo ($mes != 'todos' && isset($meses[$mes])) ? '- ' . $meses[$mes] . ' ' . date('Y') : ''; ?>
-                </h4>
+                <h4 class="mb-4">Tiempo Promedio por Ticket (Min)</h4>
                 <canvas id="tiempoPromedioChart"></canvas>
             </div>
         </div>
@@ -493,7 +452,6 @@ const gradientUsuarios = ctxUsuarios.createLinearGradient(0, 0, 0, 400);
 gradientUsuarios.addColorStop(0, '#3498db'); 
 gradientUsuarios.addColorStop(1, '#2c3e50'); 
 
-<<<<<<< HEAD
 new Chart(ctxUsuarios, {
     type: 'bar',
     data: {
@@ -509,65 +467,6 @@ new Chart(ctxUsuarios, {
     options: {
         plugins: {
             legend: { display: false } 
-=======
-/* TOP USUARIOS */
-
-new Chart(
-
-document.getElementById(
-'usuariosChart'
-),
-
-{
-    type:'bar',
-    data:{
-        labels:
-        <?php echo json_encode($usuarios); ?>,
-        datasets:[{
-            data:
-            <?php echo json_encode($cantidades); ?>,
-            borderRadius:10
-        }]
-    }
-});
-
-/* URGENCIAS */
-
-new Chart(
-document.getElementById(
-'urgenciasChart'
-),
-{
-    type:'doughnut',
-    data:{
-        labels:
-        <?php echo json_encode($urgencias); ?>,
-        datasets:[{
-            data:
-            <?php
-            echo json_encode(
-                $cantidadUrgencias
-            );
-            ?>
-        }]
-    }
-});
-
-/* TIEMPO TOTAL INVERTIDO (DOUGHNUT) */
-new Chart(
-    document.getElementById('tiempoTotalChart'),
-    {
-        type: 'doughnut',
-        data: {
-            labels: <?php echo json_encode($areasTiempo); ?>,
-            datasets: [{
-                data: <?php echo json_encode($totalMinutosArea); ?>,
-                backgroundColor: [
-                    '#3742fa', '#2ed573', '#ff4757', '#ffa502', '#5352ed', 
-                    '#ff7f50', '#2f3542', '#1e90ff', '#eccc68'
-                ]
-            }]
->>>>>>> 39ca3ca9b266516d1c4761f8d326698f4b8eb84d
         },
         scales: {
             y: {
@@ -706,6 +605,7 @@ new Chart(ctxAreas, {
         }
     }
 });
+
 /* ========================================
    LÓGICA INTELIGENTE PARA LOS CHECKBOXES
 ======================================== */
@@ -749,42 +649,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 });
 
-/* TICKETS POR ÁREA (BARRA) */
-new Chart(
-    document.getElementById('ticketsPorAreaChart'),
-    {
-        type: 'bar',
-        data: {
-            labels: <?php echo json_encode($areasNombres); ?>,
-            datasets: [{
-                label: 'Cantidad de Tickets',
-                data: <?php echo json_encode($areasCantidades); ?>,
-                backgroundColor: '#2ed573', /* Un color verde para destacar, puedes cambiarlo */
-                borderRadius: 5
-            }]
-        },
-        options: {
-            plugins: {
-                legend: { display: false }, /* Ocultamos la leyenda superior porque ya es intuitivo */
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return context.raw + ' tickets';
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1 // Para que no muestre decimales en la cantidad de tickets
-                    }
-                }
-            }
-        }
-    }
-);
 
 </script>
 </body>

@@ -188,7 +188,7 @@ href="../assets/css/style.css">
         
             <th>Usuario</th>
             <th>Area</th>
-            <th>Tipo</th>
+            <th>Descripcion</th>
             <th>Urgencia</th>
         </tr>
     </thead>
