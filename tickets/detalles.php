@@ -40,7 +40,7 @@ if (isset($_GET['ticket_id']) && !empty($_GET['ticket_id'])) {
     $resolutor = $conexion->real_escape_string(trim($_GET['resolutor']));
     $sql = "SELECT * FROM tickets WHERE usuario = '$resolutor' ORDER BY fecha_cierre DESC, id DESC";
     $resultados = $conexion->query($sql);
-    $mensajeBusqueda = "Tickets gestionados por: <strong>$resolutor</strong>";
+    $mensajeBusqueda = "Tickets levantado por: <strong>$resolutor</strong>";
 }
 ?>
 
